@@ -2,15 +2,352 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fruit Memory Match Game</title>
-  <meta http-equiv="refresh" content="0;url=/client/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <title>Fruit Memory Game - Match Pairs of Fruits and Names</title>
+  <meta name="description" content="Play a fun memory card matching game with fruit images and names. Match pairs to earn points and challenge your memory skills.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.5.95/css/materialdesignicons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Import custom font */
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+    
+    /* Base styles */
+    :root {
+      --background: 0 0% 97%;
+      --foreground: 20 14.3% 4.1%;
+      --muted: 60 4.8% 95.9%;
+      --muted-foreground: 25 5.3% 44.7%;
+      --popover: 0 0% 100%;
+      --popover-foreground: 20 14.3% 4.1%;
+      --card: 0 0% 100%;
+      --card-foreground: 20 14.3% 4.1%;
+      --border: 20 5.9% 90%;
+      --input: 20 5.9% 90%;
+      --primary: 142 72% 29%;
+      --primary-foreground: 355 100% 97%;
+      --secondary: 30 100% 50%;
+      --secondary-foreground: 60 9.1% 97.8%;
+      --accent: 60 4.8% 95.9%;
+      --accent-foreground: 24 9.8% 10%;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 60 9.1% 97.8%;
+      --ring: 20 14.3% 4.1%;
+      --radius: 0.5rem;
+      
+      /* Game specific colors */
+      --card-back: 231 71% 45%;
+      --success: 142 72% 29%;
+      --error: 0 84.2% 60.2%;
+    }
+    
+    /* Reset styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      line-height: 1.6;
+    }
+    
+    /* Layout */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Game container styles */
+    .game-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+    }
+    
+    /* Copied from your actual game styles */
+    .text-center {
+      text-align: center;
+    }
+    
+    .text-primary {
+      color: hsl(var(--primary));
+    }
+    
+    .text-3xl {
+      font-size: 1.875rem;
+      line-height: 2.25rem;
+    }
+    
+    .text-4xl {
+      font-size: 2.25rem;
+      line-height: 2.5rem;
+    }
+    
+    .md\:text-5xl {
+      font-size: 3rem;
+      line-height: 1;
+    }
+    
+    .font-bold {
+      font-weight: 700;
+    }
+    
+    .text-gray-600 {
+      color: #4b5563;
+    }
+    
+    .bg-white {
+      background-color: white;
+    }
+    
+    .rounded-lg {
+      border-radius: 0.5rem;
+    }
+    
+    .shadow-md {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    .p-6 {
+      padding: 1.5rem;
+    }
+    
+    .mb-2, .mb-4, .mb-6, .mb-8 {
+      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .space-y-3 > * + * {
+      margin-top: 0.75rem;
+    }
+    
+    .text-left {
+      text-align: left;
+    }
+    
+    .font-semibold {
+      font-weight: 600;
+    }
+    
+    .flex {
+      display: flex;
+    }
+    
+    .flex-col {
+      flex-direction: column;
+    }
+    
+    .sm\:flex-row {
+      flex-direction: row;
+    }
+    
+    .gap-4 {
+      gap: 1rem;
+    }
+    
+    .justify-center {
+      justify-content: center;
+    }
+    
+    .py-4 {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+    
+    .px-8 {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+    
+    .text-lg {
+      font-size: 1.125rem;
+      line-height: 1.75rem;
+    }
+    
+    .rounded-lg {
+      border-radius: 0.5rem;
+    }
+    
+    .text-white {
+      color: white;
+    }
+    
+    .button-primary {
+      background-color: hsl(var(--primary));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.2s;
+      font-size: 1.125rem;
+      margin: 0.5rem;
+      display: inline-block;
+      text-decoration: none;
+    }
+    
+    .button-primary:hover {
+      background-color: hsl(var(--primary) / 0.9);
+    }
+    
+    .button-secondary {
+      background-color: hsl(var(--secondary));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.2s;
+      font-size: 1.125rem;
+      margin: 0.5rem;
+      display: inline-block;
+      text-decoration: none;
+    }
+    
+    .button-secondary:hover {
+      background-color: hsl(var(--secondary) / 0.9);
+    }
+    
+    .button-tertiary {
+      background-color: hsl(var(--card-back));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.2s;
+      font-size: 1.125rem;
+      margin: 0.5rem;
+      display: inline-block;
+      text-decoration: none;
+    }
+    
+    .button-tertiary:hover {
+      background-color: hsl(var(--card-back) / 0.9);
+    }
+    
+    .level-badge {
+      display: inline-block;
+      background-color: #e2e8f0;
+      color: #1e293b;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: bold;
+      margin-left: 0.5rem;
+      font-size: 0.875rem;
+    }
+    
+    .emoji-display {
+      font-size: 2.5rem;
+      margin: 1rem 0;
+    }
+    
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    @media (min-width: 640px) {
+      .card-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    
+    .demo-card {
+      background-color: hsl(var(--card-back));
+      color: white;
+      border-radius: 0.5rem;
+      aspect-ratio: 1/1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    
+    .demo-card:hover {
+      transform: scale(1.05);
+    }
+    
+    .flipped {
+      background-color: white;
+      color: black;
+    }
+  </style>
 </head>
 <body>
-  <!-- This is a simple redirect to the game, ensuring no extra pages -->
-  <p>Redirecting to the game...</p>
+  <div class="container">
+    <div class="game-container">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-primary mb-2">
+          Fruit Memory Game
+        </h1>
+        <p class="text-gray-600 mb-4">Match the fruits with their names</p>
+      </div>
+      
+      <div id="start-screen" class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+        <h2 class="text-2xl font-bold mb-4">How to Play</h2>
+        <ul class="text-left space-y-3 mb-6">
+          <li><span class="font-semibold">Goal:</span> Match pairs of fruit emojis with their corresponding names.</li>
+          <li><span class="font-semibold">Scoring:</span> Get 5 points for each match, lose 1 point for each incorrect attempt.</li>
+          <li><span class="font-semibold">Levels:</span> Level 1 has a 4×4 grid (8 pairs), Level 2 has a 5×5 grid (12 pairs), Level 3 has a 7×7 grid (24 pairs).</li>
+          <li><span class="font-semibold">Remember:</span> Each fruit has two cards - one showing the emoji and one showing the name.</li>
+        </ul>
+        
+        <div class="space-y-4">
+          <h3 class="text-xl font-semibold">Choose a Level:</h3>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center flex-wrap">
+            <a href="/client/" class="button-primary">
+              Level 1 (4×4)
+              <span class="level-badge">Easy</span>
+            </a>
+            <a href="/client/" class="button-secondary">
+              Level 2 (5×5)
+              <span class="level-badge">Medium</span>
+            </a>
+            <a href="/client/" class="button-tertiary">
+              Level 3 (7×7)
+              <span class="level-badge">Hard</span>
+            </a>
+          </div>
+        </div>
+        
+        <div class="emoji-display">
+          🍎 🍌 🍊 🍓 🍉 🍇 🍍 🥝
+        </div>
+        
+        <p class="mb-4">Test your memory with our fruit matching game!</p>
+        
+        <a href="/client/" class="button-primary">Start Playing Now</a>
+      </div>
+    </div>
+  </div>
+
   <script>
-    window.location.href = "/client/";
+    // Simple script to handle direct entry to game
+    document.addEventListener('DOMContentLoaded', function() {
+      const buttons = document.querySelectorAll('a[href="/client/"]');
+      buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.location.href = "/client/"; 
+        });
+      });
+    });
   </script>
 </body>
 </html>
