@@ -46,14 +46,9 @@ export default function GameCard({
           }}
         >
           {card.type === "image" ? (
-            <>
-              <div className="text-4xl mb-1">
-                {card.content}
-              </div>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {card.name}
-              </span>
-            </>
+            <div className="text-5xl">
+              {card.content}
+            </div>
           ) : (
             <span className="text-lg font-medium text-gray-700 dark:text-gray-300">
               {card.name}

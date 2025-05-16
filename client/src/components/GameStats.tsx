@@ -6,7 +6,7 @@ interface GameStatsProps {
   highScore: number;
   onReset: () => void;
   onBackToMenu: () => void;
-  level: 1 | 2;
+  level: 1 | 2 | 3;
 }
 
 export default function GameStats({ 
@@ -26,7 +26,9 @@ export default function GameStats({
             </div>
             <div>
               <p className="text-gray-500 dark:text-gray-400 text-sm">Level</p>
-              <p className="text-lg font-bold">{level === 1 ? "Easy (5×5)" : "Hard (7×7)"}</p>
+              <p className="text-lg font-bold">
+                {level === 1 ? "Easy (4×4)" : level === 2 ? "Medium (5×5)" : "Hard (7×7)"}
+              </p>
             </div>
           </div>
         </div>

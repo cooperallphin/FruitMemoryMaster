@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 
 // Define game states
 type GameState = "start" | "playing" | "complete";
-type GameLevel = 1 | 2;
+type GameLevel = 1 | 2 | 3; // Level 1: 4x4, Level 2: 5x5, Level 3: 7x7
 
 export default function Game() {
   // Game state management
@@ -45,7 +45,14 @@ export default function Game() {
   // Initialize cards based on level
   useEffect(() => {
     if (gameState === "playing") {
-      const gridSize = level === 1 ? 25 : 49; // 5x5 for level 1, 7x7 for level 2
+      let gridSize: number;
+      if (level === 1) {
+        gridSize = 16; // 4x4 for level 1
+      } else if (level === 2) {
+        gridSize = 25; // 5x5 for level 2
+      } else {
+        gridSize = 49; // 7x7 for level 3
+      }
       setCards(createGameCards(fruits, gridSize));
     }
   }, [gameState, level]);
@@ -149,7 +156,14 @@ export default function Game() {
 
   // Reset current game
   const resetGame = () => {
-    const gridSize = level === 1 ? 25 : 49; // 5x5 for level 1, 7x7 for level 2
+    let gridSize: number;
+    if (level === 1) {
+      gridSize = 16; // 4x4 for level 1
+    } else if (level === 2) {
+      gridSize = 25; // 5x5 for level 2
+    } else {
+      gridSize = 49; // 7x7 for level 3
+    }
     setCards(createGameCards(fruits, gridSize));
     setFlippedIndices([]);
     setMatchedPairs([]);

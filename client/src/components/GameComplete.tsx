@@ -6,7 +6,7 @@ interface GameCompleteProps {
   score: number;
   onNewGame: () => void;
   onLevelSelect: () => void;
-  level: 1 | 2;
+  level: 1 | 2 | 3;
 }
 
 export default function GameComplete({ score, onNewGame, onLevelSelect, level }: GameCompleteProps) {
