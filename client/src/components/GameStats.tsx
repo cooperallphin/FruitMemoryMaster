@@ -1,0 +1,44 @@
+import { Button } from "@/components/ui/button";
+import { RefreshCw, Star, Trophy } from "lucide-react";
+
+interface GameStatsProps {
+  currentScore: number;
+  highScore: number;
+  onReset: () => void;
+}
+
+export default function GameStats({ currentScore, highScore, onReset }: GameStatsProps) {
+  return (
+    <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+      <div className="stats flex gap-6 md:gap-10 justify-center items-center">
+        <div className="score-container bg-white dark:bg-card rounded-lg shadow-md px-6 py-3">
+          <div className="flex items-center">
+            <Star className="text-secondary h-6 w-6 mr-2" />
+            <div>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">Current Score</p>
+              <p className="text-xl font-bold">{currentScore}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="high-score-container bg-white dark:bg-card rounded-lg shadow-md px-6 py-3">
+          <div className="flex items-center">
+            <Trophy className="text-secondary h-6 w-6 mr-2" />
+            <div>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">High Score</p>
+              <p className="text-xl font-bold">{highScore}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <Button 
+        onClick={onReset}
+        className="bg-secondary hover:bg-secondary/90 text-white font-bold py-2 px-6 rounded-full transition-all flex items-center"
+      >
+        <RefreshCw className="mr-2 h-4 w-4" />
+        New Game
+      </Button>
+    </div>
+  );
+}

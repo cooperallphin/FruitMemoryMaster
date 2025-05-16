@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+
+:root {
+  --background: 0 0% 97%;
+  --foreground: 20 14.3% 4.1%;
+  --muted: 60 4.8% 95.9%;
+  --muted-foreground: 25 5.3% 44.7%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 14.3% 4.1%;
+  --card: 0 0% 100%;
+  --card-foreground: 20 14.3% 4.1%;
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
+  --primary: 142 72% 29%;
+  --primary-foreground: 355 100% 97%;
+  --secondary: 30 100% 50%;
+  --secondary-foreground: 60 9.1% 97.8%;
+  --accent: 60 4.8% 95.9%;
+  --accent-foreground: 24 9.8% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --ring: 20 14.3% 4.1%;
+  --radius: 0.5rem;
+  
+  /* Game specific colors */
+  --card-back: 231 71% 45%;
+  --success: 142 72% 29%;
+  --error: 0 84.2% 60.2%;
+  
+  /* Chart colors */
+  --chart-1: 142 72% 29%;
+  --chart-2: 30 100% 50%;
+  --chart-3: 231 71% 45%;
+  --chart-4: 0 84.2% 60.2%;
+  --chart-5: 270 60% 50%;
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --primary: 142 72% 29%;
+  --primary-foreground: 355 100% 97%;
+  --secondary: 30 100% 50%;
+  --secondary-foreground: 0 0% 98%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 240 4.9% 83.9%;
+  --radius: 0.5rem;
+  
+  /* Game specific colors */
+  --card-back: 231 71% 35%;
+  --success: 142 72% 29%;
+  --error: 0 84.2% 60.2%;
+  
+  /* Chart colors */
+  --chart-1: 142 72% 29%;
+  --chart-2: 30 100% 50%;
+  --chart-3: 231 71% 45%;
+  --chart-4: 0 84.2% 60.2%;
+  --chart-5: 270 60% 50%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-nunito antialiased bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .font-nunito {
+    font-family: 'Nunito', sans-serif;
+  }
+  
+  .bg-card-back {
+    background-color: hsl(var(--card-back));
+  }
+  
+  .text-success {
+    color: hsl(var(--success));
+  }
+  
+  .text-error {
+    color: hsl(var(--error));
+  }
+  
+  .bg-success-light {
+    background-color: hsl(var(--success) / 0.1);
+  }
+  
+  .bg-error-light {
+    background-color: hsl(var(--error) / 0.1);
+  }
+}
+
+/* Game specific animations */
+@keyframes success-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 hsla(var(--success) / 0.7); }
+  50% { box-shadow: 0 0 0 10px hsla(var(--success) / 0); }
+}
+
+@keyframes error-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 hsla(var(--error) / 0.7); }
+  50% { box-shadow: 0 0 0 10px hsla(var(--error) / 0); }
+}
+
+.success-pulse {
+  animation: success-pulse 1s;
+}
+
+.error-pulse {
+  animation: error-pulse 1s;
+}
+
+/* Card flip animations - these will be applied through framer-motion but defined here for reference */
+.card-front, .card-back {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+}
