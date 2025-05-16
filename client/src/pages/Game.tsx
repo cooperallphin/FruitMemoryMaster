@@ -196,24 +196,33 @@ export default function Game() {
             <ul className="text-left space-y-3 mb-6">
               <li><span className="font-semibold">Goal:</span> Match pairs of fruit emojis with their corresponding names.</li>
               <li><span className="font-semibold">Scoring:</span> Get 5 points for each match, lose 1 point for each incorrect attempt.</li>
-              <li><span className="font-semibold">Levels:</span> Level 1 has a 5×5 grid (12 pairs), Level 2 has a 7×7 grid (24 pairs).</li>
+              <li><span className="font-semibold">Levels:</span> Level 1 has a 4×4 grid (8 pairs), Level 2 has a 5×5 grid (12 pairs), Level 3 has a 7×7 grid (24 pairs).</li>
               <li><span className="font-semibold">Remember:</span> Each fruit has two cards - one showing the emoji and one showing the name.</li>
             </ul>
             
             <div className="space-y-4">
               <h3 className="text-xl font-semibold">Choose a Level:</h3>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center flex-wrap">
                 <Button 
                   onClick={() => startGame(1)}
-                  className="bg-primary hover:bg-primary/90 text-white font-bold py-4 px-8 text-lg rounded-lg"
+                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 text-lg rounded-lg"
                 >
-                  Level 1 (5×5)
+                  Level 1 (4×4)
+                  <span className="text-xs block mt-1">Easy</span>
                 </Button>
                 <Button 
                   onClick={() => startGame(2)}
-                  className="bg-secondary hover:bg-secondary/90 text-white font-bold py-4 px-8 text-lg rounded-lg"
+                  className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-6 text-lg rounded-lg"
                 >
-                  Level 2 (7×7)
+                  Level 2 (5×5)
+                  <span className="text-xs block mt-1">Medium</span>
+                </Button>
+                <Button 
+                  onClick={() => startGame(3)}
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-6 text-lg rounded-lg"
+                >
+                  Level 3 (7×7)
+                  <span className="text-xs block mt-1">Hard</span>
                 </Button>
               </div>
             </div>
