@@ -1,11 +1,17 @@
 import { Card, Fruit } from "@/data/fruits";
 
 // Create a complete set of game cards from fruit data
-export function createGameCards(fruits: Fruit[]): Card[] {
+export function createGameCards(fruits: Fruit[], gridSize: number = 25): Card[] {
   // Create pairs of cards (image + name for each fruit)
   const cardPairs: Card[] = [];
   
-  fruits.forEach((fruit) => {
+  // Calculate number of pairs needed based on grid size
+  const pairsNeeded = Math.floor(gridSize / 2);
+  
+  // Limit to the number of pairs we need for the grid
+  const fruitsToUse = fruits.slice(0, pairsNeeded);
+  
+  fruitsToUse.forEach((fruit) => {
     // Create the image card
     cardPairs.push({
       id: `${fruit.id}-image`,
@@ -25,8 +31,8 @@ export function createGameCards(fruits: Fruit[]): Card[] {
     });
   });
   
-  // If we need an odd number of cards (for 7x7 grid), add one blank/special card
-  if (cardPairs.length < 49) {
+  // If we need an odd number of cards (for 5x5 or 7x7 grid), add one special card
+  if (cardPairs.length < gridSize) {
     const specialCard: Card = {
       id: "special",
       pairId: "special",
