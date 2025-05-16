@@ -99,7 +99,7 @@ export default function Game() {
         }, 1000);
       } else {
         // No match
-        setCurrentScore((prev) => Math.max(0, prev - 1));
+        setCurrentScore((prev) => prev - 1);
         
         // Show error notification
         setNotification({
