@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Fruit Memory Game - Match Pairs of Fruits and Names</title>
+    <meta name="description" content="Play a fun memory card matching game with fruit images and names. Match pairs to earn points and challenge your memory skills." />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.5.95/css/materialdesignicons.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+      /* Base styles */
+      :root {
+        --primary-color: #FF6B6B;
+        --secondary-color: #4ECDC4;
+        --tertiary-color: #FFE66D;
+        --bg-color: #f9f9f9;
+        --text-color: #333;
+        --card-color: #fff;
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      
+      body {
+        font-family: 'Nunito', sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+      }
+      
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      
+      /* Game container */
+      .game-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        padding: 2rem;
+      }
+      
+      /* Header */
+      .header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      
+      .title {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+      }
+      
+      .subtitle {
+        font-size: 1.2rem;
+        color: #666;
+      }
+      
+      /* Game board */
+      .game-board {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 1rem;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      
+      /* Card */
+      .card {
+        aspect-ratio: 1/1;
+        perspective: 1000px;
+        cursor: pointer;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.6s;
+      }
+      
+      .card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: transform 0.6s;
+      }
+      
+      .card.flipped .card-inner {
+        transform: rotateY(180deg);
+      }
+      
+      .card-front, .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+      
+      .card-front {
+        background-color: var(--primary-color);
+        transform: rotateY(180deg);
+      }
+      
+      .card-back {
+        background-color: var(--card-color);
+        background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      }
+      
+      .card-content {
+        font-size: 2rem;
+        text-align: center;
+      }
+      
+      .card-name {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+      
+      /* Buttons */
+      .button {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: bold;
+        text-decoration: none;
+        margin: 0.5rem;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+      }
+      
+      .button-primary {
+        background-color: var(--primary-color);
+        color: white;
+      }
+      
+      .button-primary:hover {
+        background-color: #ff5252;
+        transform: translateY(-2px);
+      }
+      
+      .button-secondary {
+        background-color: var(--secondary-color);
+        color: white;
+      }
+      
+      .button-secondary:hover {
+        background-color: #3dbdb3;
+        transform: translateY(-2px);
+      }
+      
+      .button-tertiary {
+        background-color: var(--tertiary-color);
+        color: #333;
+      }
+      
+      .button-tertiary:hover {
+        background-color: #ffe043;
+        transform: translateY(-2px);
+      }
+      
+      /* Level selection */
+      .level-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        margin: 2rem 0;
+      }
+      
+      .level-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        background-color: rgba(255, 255, 255, 0.2);
+        margin-left: 0.5rem;
+      }
+      
+      /* Stats */
+      .stats {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 800px;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+      
+      .score {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+      
+      .high-score {
+        color: #6200ea;
+      }
+      
+      /* Instructions */
+      .instructions {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        max-width: 800px;
+        margin: 0 auto 2rem;
+      }
+      
+      .instructions h2 {
+        color: var(--primary-color);
+        margin-top: 0;
+      }
+      
+      .instructions ul {
+        padding-left: 1.5rem;
+      }
+      
+      .instructions li {
+        margin-bottom: 0.5rem;
+      }
+      
+      /* Game over */
+      .game-over {
+        text-align: center;
+        padding: 2rem;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        max-width: 500px;
+        margin: 0 auto;
+      }
+      
+      .game-over h2 {
+        color: var(--primary-color);
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+      
+      .final-score {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      /* Responsive */
+      @media (max-width: 768px) {
+        .title {
+          font-size: 2rem;
+        }
+        
+        .game-board {
+          grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        }
+        
+        .card-content {
+          font-size: 1.5rem;
+        }
+        
+        .card-name {
+          font-size: 1rem;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .container {
+          padding: 1rem;
+        }
+        
+        .game-board {
+          grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+        }
+        
+        .card-content {
+          font-size: 1.2rem;
+        }
+        
+        .stats {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+      }
+      
+      /* Animation */
+      @keyframes pop {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+      }
+      
+      .matched {
+        animation: pop 0.3s ease-in-out;
+      }
+      
+      /* Notification */
+      .notification {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: bold;
+        color: white;
+        box-shadow: var(--shadow);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      .notification.visible {
+        opacity: 1;
+      }
+      
+      .notification.success {
+        background-color: #4caf50;
+      }
+      
+      .notification.error {
+        background-color: #f44336;
+      }
+      
+      /* Emoji display */
+      .emoji-display {
+        font-size: 3rem;
+        display: flex;
+        gap: 1rem;
+        margin: 2rem 0;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="game-container">
+        <div class="header">
+          <h1 class="title">Fruit Memory Game</h1>
+          <p class="subtitle">Match fruits with their names to win!</p>
+        </div>
+        
+        <div class="instructions">
+          <h2>How to Play</h2>
+          <ul>
+            <li><strong>Goal:</strong> Match pairs of fruit emojis with their corresponding names.</li>
+            <li><strong>Scoring:</strong> Get 5 points for each match, lose 1 point for each incorrect attempt.</li>
+            <li><strong>Levels:</strong> Choose from Easy (4×4), Medium (5×5), or Hard (7×7) grids.</li>
+            <li><strong>Remember:</strong> Each fruit has two cards - one showing the emoji and one showing the name.</li>
+          </ul>
+        </div>
+        
+        <div class="level-container">
+          <button id="level1" class="button button-primary">
+            Level 1 (4×4)
+            <span class="level-badge">Easy</span>
+          </button>
+          <button id="level2" class="button button-secondary">
+            Level 2 (5×5)
+            <span class="level-badge">Medium</span>
+          </button>
+          <button id="level3" class="button button-tertiary">
+            Level 3 (7×7)
+            <span class="level-badge">Hard</span>
+          </button>
+        </div>
+        
+        <div class="emoji-display">
+          🍎 🍌 🍇 🍓 🍊 🥝 🍍 🥭
+        </div>
+        
+        <div id="game-board" class="game-board" style="display: none;"></div>
+        
+        <div id="game-stats" class="stats" style="display: none;">
+          <div>
+            <span class="score">Score: <span id="current-score">0</span></span>
+          </div>
+          <div>
+            <span class="score high-score">High Score: <span id="high-score">0</span></span>
+          </div>
+          <div>
+            <button id="reset-game" class="button button-secondary">Reset Game</button>
+            <button id="back-to-menu" class="button button-primary">Back to Menu</button>
+          </div>
+        </div>
+        
+        <div id="game-over" class="game-over" style="display: none;">
+          <h2>Game Complete!</h2>
+          <div class="final-score">Your Score: <span id="final-score">0</span></div>
+          <button id="play-again" class="button button-primary">Play Again</button>
+          <button id="choose-level" class="button button-secondary">Choose Level</button>
+        </div>
+        
+        <div id="notification" class="notification">
+          <span id="notification-text"></span>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      // Game data and state
+      const fruits = [
+        { id: "apple", name: "Apple", emoji: "🍎", color: "#ff6b6b" },
+        { id: "banana", name: "Banana", emoji: "🍌", color: "#ffe066" },
+        { id: "orange", name: "Orange", emoji: "🍊", color: "#ff9f43" },
+        { id: "grape", name: "Grape", emoji: "🍇", color: "#a55eea" },
+        { id: "strawberry", name: "Strawberry", emoji: "🍓", color: "#ff6b6b" },
+        { id: "watermelon", name: "Watermelon", emoji: "🍉", color: "#ff6b6b" },
+        { id: "peach", name: "Peach", emoji: "🍑", color: "#ffbe76" },
+        { id: "pear", name: "Pear", emoji: "🍐", color: "#badc58" },
+        { id: "cherry", name: "Cherry", emoji: "🍒", color: "#ff6b6b" },
+        { id: "lemon", name: "Lemon", emoji: "🍋", color: "#ffe066" },
+        { id: "avocado", name: "Avocado", emoji: "🥑", color: "#6ab04c" },
+        { id: "coconut", name: "Coconut", emoji: "🥥", color: "#d1d8e0" },
+        { id: "kiwi", name: "Kiwi", emoji: "🥝", color: "#badc58" },
+        { id: "mango", name: "Mango", emoji: "🥭", color: "#ffbe76" },
+        { id: "pineapple", name: "Pineapple", emoji: "🍍", color: "#badc58" },
+        { id: "blueberry", name: "Blueberry", emoji: "🫐", color: "#4834d4" },
+        { id: "melon", name: "Melon", emoji: "🍈", color: "#badc58" },
+        { id: "fig", name: "Fig", emoji: "🧉", color: "#a55eea" },
+        { id: "papaya", name: "Papaya", emoji: "🍑", color: "#ffbe76" },
+        { id: "pomegranate", name: "Pomegranate", emoji: "🍎", color: "#ff6b6b" },
+        { id: "lime", name: "Lime", emoji: "🫒", color: "#badc58" },
+        { id: "plum", name: "Plum", emoji: "🍆", color: "#a55eea" },
+        { id: "dragonfruit", name: "Dragonfruit", emoji: "🐲", color: "#ff6b6b" },
+        { id: "apricot", name: "Apricot", emoji: "🍑", color: "#ffbe76" },
+      ];
+      
+      let gameState = {
+        cards: [],
+        flippedIndices: [],
+        matchedPairs: [],
+        score: 0,
+        highScore: 0,
+        level: 1,
+        isLocked: false,
+        gameStarted: false,
+      };
+      
+      // DOM Elements
+      const gameBoardElement = document.getElementById('game-board');
+      const gameStatsElement = document.getElementById('game-stats');
+      const gameOverElement = document.getElementById('game-over');
+      const levelButtons = [
+        document.getElementById('level1'),
+        document.getElementById('level2'),
+        document.getElementById('level3'),
+      ];
+      const currentScoreElement = document.getElementById('current-score');
+      const highScoreElement = document.getElementById('high-score');
+      const finalScoreElement = document.getElementById('final-score');
+      const resetButton = document.getElementById('reset-game');
+      const backToMenuButton = document.getElementById('back-to-menu');
+      const playAgainButton = document.getElementById('play-again');
+      const chooseLevelButton = document.getElementById('choose-level');
+      const notificationElement = document.getElementById('notification');
+      const notificationTextElement = document.getElementById('notification-text');
+      
+      // Initialize from localStorage
+      const savedHighScore = localStorage.getItem('fruitMemoryHighScore');
+      if (savedHighScore) {
+        gameState.highScore = parseInt(savedHighScore, 10);
+        highScoreElement.textContent = gameState.highScore;
+      }
+      
+      // Utility Functions
+      function shuffleArray(array) {
+        const newArray = [...array];
+        for (let i = newArray.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+        }
+        return newArray;
+      }
+      
+      function createGameCards(level) {
+        let gridSize;
+        if (level === 1) {
+          gridSize = 16; // 4x4
+        } else if (level === 2) {
+          gridSize = 25; // 5x5
+        } else {
+          gridSize = 49; // 7x7
+        }
+        
+        const pairCount = Math.floor(gridSize / 2);
+        const selectedFruits = shuffleArray(fruits).slice(0, pairCount);
+        
+        const cards = [];
+        selectedFruits.forEach(fruit => {
+          // Card with emoji
+          cards.push({
+            id: `${fruit.id}-emoji`,
+            pairId: fruit.id,
+            type: 'image',
+            name: fruit.name,
+            content: fruit.emoji,
+          });
+          
+          // Card with name
+          cards.push({
+            id: `${fruit.id}-name`,
+            pairId: fruit.id,
+            type: 'name',
+            name: fruit.name,
+            content: null,
+          });
+        });
+        
+        return shuffleArray(cards);
+      }
+      
+      // Game Logic
+      function startGame(level) {
+        gameState.level = level;
+        gameState.cards = createGameCards(level);
+        gameState.flippedIndices = [];
+        gameState.matchedPairs = [];
+        gameState.score = 0;
+        gameState.isLocked = false;
+        gameState.gameStarted = true;
+        
+        // Update UI
+        gameBoardElement.style.display = 'grid';
+        gameStatsElement.style.display = 'flex';
+        gameOverElement.style.display = 'none';
+        
+        // Set grid columns based on level
+        let columns;
+        if (level === 1) {
+          columns = 4; // 4x4
+        } else if (level === 2) {
+          columns = 5; // 5x5
+        } else {
+          columns = 7; // 7x7
+        }
+        
+        gameBoardElement.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+        
+        // Update score display
+        currentScoreElement.textContent = gameState.score;
+        
+        // Render cards
+        renderGameBoard();
+      }
+      
+      function renderGameBoard() {
+        gameBoardElement.innerHTML = '';
+        
+        gameState.cards.forEach((card, index) => {
+          const isFlipped = gameState.flippedIndices.includes(index);
+          const isMatched = gameState.matchedPairs.includes(card.pairId);
+          
+          const cardElement = document.createElement('div');
+          cardElement.className = `card ${isFlipped ? 'flipped' : ''} ${isMatched ? 'matched' : ''}`;
+          cardElement.dataset.index = index;
+          
+          const cardInner = document.createElement('div');
+          cardInner.className = 'card-inner';
+          
+          const cardFront = document.createElement('div');
+          cardFront.className = 'card-front';
+          
+          const cardBack = document.createElement('div');
+          cardBack.className = 'card-back';
+          
+          if (card.type === 'image') {
+            const cardContent = document.createElement('div');
+            cardContent.className = 'card-content';
+            cardContent.textContent = card.content;
+            cardFront.appendChild(cardContent);
+          } else {
+            const cardName = document.createElement('div');
+            cardName.className = 'card-name';
+            cardName.textContent = card.name;
+            cardFront.appendChild(cardName);
+          }
+          
+          cardInner.appendChild(cardFront);
+          cardInner.appendChild(cardBack);
+          cardElement.appendChild(cardInner);
+          
+          if (!isMatched) {
+            cardElement.addEventListener('click', () => handleCardClick(index));
+          }
+          
+          gameBoardElement.appendChild(cardElement);
+        });
+      }
+      
+      function handleCardClick(index) {
+        // Prevent clicking if game is locked or card is already flipped/matched
+        if (
+          gameState.isLocked ||
+          gameState.flippedIndices.includes(index) ||
+          gameState.matchedPairs.includes(gameState.cards[index].pairId)
+        ) {
+          return;
+        }
+        
+        // Add card to flipped cards
+        gameState.flippedIndices.push(index);
+        renderGameBoard();
+        
+        // Play flip sound
+        const flipSound = new Audio("https://www.soundjay.com/misc/sounds/page-flip-01a.mp3");
+        flipSound.volume = 0.5;
+        flipSound.play().catch(() => {
+          // Silently fail if audio can't play
+        });
+        
+        // Check for pair match if we have 2 cards flipped
+        if (gameState.flippedIndices.length === 2) {
+          gameState.isLocked = true;
+          
+          const [firstIndex, secondIndex] = gameState.flippedIndices;
+          const firstCard = gameState.cards[firstIndex];
+          const secondCard = gameState.cards[secondIndex];
+          
+          if (firstCard.pairId === secondCard.pairId) {
+            // Match found
+            gameState.matchedPairs.push(firstCard.pairId);
+            gameState.score += 5;
+            
+            // Show success notification
+            showNotification(true, 5);
+            
+            // Reset flipped cards after a delay
+            setTimeout(() => {
+              gameState.flippedIndices = [];
+              gameState.isLocked = false;
+              
+              // Update UI
+              renderGameBoard();
+              currentScoreElement.textContent = gameState.score;
+              
+              // Check if game is complete
+              checkGameCompletion();
+            }, 1000);
+          } else {
+            // No match
+            gameState.score -= 1;
+            
+            // Show error notification
+            showNotification(false, -1);
+            
+            // Flip cards back after a delay
+            setTimeout(() => {
+              gameState.flippedIndices = [];
+              gameState.isLocked = false;
+              
+              // Update UI
+              renderGameBoard();
+              currentScoreElement.textContent = gameState.score;
+            }, 1500);
+          }
+        }
+      }
+      
+      function showNotification(isMatch, pointChange) {
+        notificationElement.className = `notification ${isMatch ? 'success' : 'error'} visible`;
+        notificationTextElement.textContent = `${isMatch ? 'Match!' : 'No match'} ${pointChange > 0 ? '+' : ''}${pointChange} points`;
+        
+        setTimeout(() => {
+          notificationElement.className = 'notification';
+        }, 2000);
+      }
+      
+      function checkGameCompletion() {
+        if (gameState.matchedPairs.length === gameState.cards.length / 2) {
+          // Game is complete
+          
+          // Update high score if needed
+          if (gameState.score > gameState.highScore) {
+            gameState.highScore = gameState.score;
+            localStorage.setItem('fruitMemoryHighScore', gameState.highScore.toString());
+            highScoreElement.textContent = gameState.highScore;
+          }
+          
+          // Show game over screen
+          finalScoreElement.textContent = gameState.score;
+          gameBoardElement.style.display = 'none';
+          gameStatsElement.style.display = 'none';
+          gameOverElement.style.display = 'block';
+        }
+      }
+      
+      function resetGame() {
+        startGame(gameState.level);
+      }
+      
+      function backToMenu() {
+        gameState.gameStarted = false;
+        gameBoardElement.style.display = 'none';
+        gameStatsElement.style.display = 'none';
+        gameOverElement.style.display = 'none';
+      }
+      
+      // Event Listeners
+      levelButtons[0].addEventListener('click', () => startGame(1));
+      levelButtons[1].addEventListener('click', () => startGame(2));
+      levelButtons[2].addEventListener('click', () => startGame(3));
+      resetButton.addEventListener('click', resetGame);
+      backToMenuButton.addEventListener('click', backToMenu);
+      playAgainButton.addEventListener('click', resetGame);
+      chooseLevelButton.addEventListener('click', backToMenu);
+      
+      // Initialize high score display
+      highScoreElement.textContent = gameState.highScore;
+    </script>
+  </body>
+</html>
